@@ -1,0 +1,34 @@
+{
+    "bottomLeftComponent": {
+      "width": 0.75,
+      "height": 0.35
+    },
+    "aboveQrComponent": {
+      "doiTamSangPhai": 0.2,
+      "doiTamLenTren": 0.1,
+      "width": 0.6,
+      "height": 0.45
+    },
+    "modelParams": {
+      "det": true,
+      "cls": false,
+      "use_angle_cls": true,
+      "rec": true,
+      "det_db_thresh": 0.3,
+      "det_db_box_thresh": 0.5,
+      "cls_thresh": 0.9,
+      "cpu_math_library_num_threads": 6,
+      "det_db_score_mode": true
+    },
+    "labelRectangle": {
+      "up": 1.2,
+      "down": 2.2,
+      "left": 3.8,
+      "right": 1.4
+    },
+    "systemArivable": {
+      "debugMode": false,
+      "showTime": true,
+      "saveJsonResult": false
+    }
+  }

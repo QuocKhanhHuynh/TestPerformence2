@@ -1,0 +1,172 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|d:\\my_work\\cpuperformence\\performencecpu - copy\\testperformence\\ocr\\utils\\yolo11segopenvino.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|solutionrelative:testperformence\\ocr\\utils\\yolo11segopenvino.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|d:\\my_work\\cpuperformence\\performencecpu - copy\\testperformence\\ocr\\utils\\performanceaccumulator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|solutionrelative:testperformence\\ocr\\utils\\performanceaccumulator.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|d:\\my_work\\cpuperformence\\performencecpu - copy\\testperformence\\ocr\\utils\\yolo11seg.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|solutionrelative:testperformence\\ocr\\utils\\yolo11seg.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|d:\\my_work\\cpuperformence\\performencecpu - copy\\testperformence\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|solutionrelative:testperformence\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|d:\\my_work\\cpuperformence\\performencecpu - copy\\testperformence\\testperformence.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|solutionrelative:testperformence\\testperformence.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|d:\\my_work\\cpuperformence\\performencecpu - copy\\testperformence\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|solutionrelative:testperformence\\form1.designer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\testperformence\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "RelativeMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|solutionrelative:testperformence\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|d:\\my_work\\cpuperformence\\performencecpu - copy\\testperformence\\ocr\\utils\\utils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|solutionrelative:testperformence\\ocr\\utils\\utils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|d:\\my_work\\cpuperformence\\performencecpu - copy\\testperformence\\ocr\\utils\\config.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{07CD7127-0B88-494C-8C69-6FB270294406}|TestPerformence\\TestPerformence.csproj|solutionrelative:testperformence\\ocr\\utils\\config.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Yolo11SegOpenVINO.cs",
+              "DocumentMoniker": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\OCR\\Utils\\Yolo11SegOpenVINO.cs",
+              "RelativeDocumentMoniker": "TestPerformence\\OCR\\Utils\\Yolo11SegOpenVINO.cs",
+              "ToolTip": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\OCR\\Utils\\Yolo11SegOpenVINO.cs",
+              "RelativeToolTip": "TestPerformence\\OCR\\Utils\\Yolo11SegOpenVINO.cs",
+              "ViewState": "AgIAACQAAAAAAAAAAAAmwIQAAAA6AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T09:33:02.51Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "utils.cs",
+              "DocumentMoniker": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\OCR\\Utils\\utils.cs",
+              "RelativeDocumentMoniker": "TestPerformence\\OCR\\Utils\\utils.cs",
+              "ToolTip": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\OCR\\Utils\\utils.cs",
+              "RelativeToolTip": "TestPerformence\\OCR\\Utils\\utils.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T07:08:53.535Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "TestPerformence.csproj",
+              "DocumentMoniker": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\TestPerformence.csproj",
+              "RelativeDocumentMoniker": "TestPerformence\\TestPerformence.csproj",
+              "ToolTip": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\TestPerformence.csproj",
+              "RelativeToolTip": "TestPerformence\\TestPerformence.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-12-25T04:36:16.517Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Form1.cs",
+              "DocumentMoniker": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\Form1.cs",
+              "RelativeDocumentMoniker": "TestPerformence\\Form1.cs",
+              "ToolTip": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\Form1.cs",
+              "RelativeToolTip": "TestPerformence\\Form1.cs",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAowDIAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T03:05:34.393Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Yolo11Seg.cs",
+              "DocumentMoniker": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\OCR\\Utils\\Yolo11Seg.cs",
+              "RelativeDocumentMoniker": "TestPerformence\\OCR\\Utils\\Yolo11Seg.cs",
+              "ToolTip": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\OCR\\Utils\\Yolo11Seg.cs",
+              "RelativeToolTip": "TestPerformence\\OCR\\Utils\\Yolo11Seg.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T03:00:33.625Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "PerformanceAccumulator.cs",
+              "DocumentMoniker": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\OCR\\Utils\\PerformanceAccumulator.cs",
+              "RelativeDocumentMoniker": "TestPerformence\\OCR\\Utils\\PerformanceAccumulator.cs",
+              "ToolTip": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\OCR\\Utils\\PerformanceAccumulator.cs",
+              "RelativeToolTip": "TestPerformence\\OCR\\Utils\\PerformanceAccumulator.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T02:49:49.149Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "Form1.cs [Design]",
+              "DocumentMoniker": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\Form1.cs",
+              "RelativeDocumentMoniker": "TestPerformence\\Form1.cs",
+              "ToolTip": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\Form1.cs [Design]",
+              "RelativeToolTip": "TestPerformence\\Form1.cs [Design]",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T02:12:29.98Z",
+              "EditorCaption": " [Design]"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "Form1.Designer.cs",
+              "DocumentMoniker": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\Form1.Designer.cs",
+              "RelativeDocumentMoniker": "TestPerformence\\Form1.Designer.cs",
+              "ToolTip": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\Form1.Designer.cs",
+              "RelativeToolTip": "TestPerformence\\Form1.Designer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAMwAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T01:37:15.349Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Config.cs",
+              "DocumentMoniker": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\OCR\\Utils\\Config.cs",
+              "RelativeDocumentMoniker": "TestPerformence\\OCR\\Utils\\Config.cs",
+              "ToolTip": "D:\\my_work\\CPUPerformence\\PerformenceCpu - Copy\\TestPerformence\\OCR\\Utils\\Config.cs",
+              "RelativeToolTip": "TestPerformence\\OCR\\Utils\\Config.cs",
+              "ViewState": "AgIAAAsAAAAAAAAAAAAxwCEAAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-25T01:27:03.51Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
