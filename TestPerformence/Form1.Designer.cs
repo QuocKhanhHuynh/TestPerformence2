@@ -16,6 +16,8 @@
         private void InitializeComponent()
         {
             btnSelectImage = new Button();
+            btnConfig = new Button();
+            btnStatistics = new Button();
             picOriginal = new PictureBox();
             picProcessed = new PictureBox();
             lblQRCode = new Label();
@@ -42,6 +44,28 @@
             btnSelectImage.Text = "Chọn ảnh";
             btnSelectImage.UseVisualStyleBackColor = true;
             btnSelectImage.Click += btnSelectImage_Click;
+            // 
+            // btnConfig
+            // 
+            btnConfig.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnConfig.Location = new Point(168, 12);
+            btnConfig.Name = "btnConfig";
+            btnConfig.Size = new Size(120, 40);
+            btnConfig.TabIndex = 14;
+            btnConfig.Text = "Cấu hình";
+            btnConfig.UseVisualStyleBackColor = true;
+            btnConfig.Click += btnConfig_Click;
+            // 
+            // btnStatistics
+            // 
+            btnStatistics.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            btnStatistics.Location = new Point(294, 12);
+            btnStatistics.Name = "btnStatistics";
+            btnStatistics.Size = new Size(150, 40);
+            btnStatistics.TabIndex = 13;
+            btnStatistics.Text = "Thống kê";
+            btnStatistics.UseVisualStyleBackColor = true;
+            btnStatistics.Click += btnStatistics_Click;
             // 
             // picOriginal
             // 
@@ -175,6 +199,8 @@
             Controls.Add(lblQRCode);
             Controls.Add(picProcessed);
             Controls.Add(picOriginal);
+            Controls.Add(btnStatistics);
+            Controls.Add(btnConfig);
             Controls.Add(btnSelectImage);
             Name = "Form1";
             Text = "Label Detection - YOLO & OCR";
@@ -187,6 +213,8 @@
         #endregion
 
         private Button btnSelectImage;
+        private Button btnConfig;
+        private Button btnStatistics;
         private PictureBox picOriginal;
         private PictureBox picProcessed;
         private Label lblQRCode;

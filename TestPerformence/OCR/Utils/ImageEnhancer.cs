@@ -47,6 +47,28 @@ namespace GarmentGridApp.Presentation.OCR.Utils
             }
         }
 
+        /// <summary>
+        /// Chuyển đổi hẳn về ảnh mức xám 1 kênh màu (8bpp Indexed).
+        /// </summary>
+        public static Bitmap ConvertToGrayscale(Bitmap input)
+        {
+            try
+            {
+                using Mat src = BitmapToMat(input);
+                using Mat gray = new Mat();
+
+                // Chuyển sang Gray (1 kênh duy nhất)
+                Cv2.CvtColor(src, gray, ColorConversionCodes.BGR2GRAY);
+
+                return MatToBitmap(gray);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[ConvertToGrayscale] Error: {ex.Message}");
+                return (Bitmap)input.Clone();
+            }
+        }
+
 
         #region 1. XỬ LÝ ẢNH BỊ CONG (Distortion Correction)
 
@@ -509,24 +531,44 @@ namespace GarmentGridApp.Presentation.OCR.Utils
             int h = mat.Height;
             int channels = mat.Channels();
 
-            Bitmap bmp = new Bitmap(w, h, PixelFormat.Format24bppRgb);
+            // Nếu 1 kênh dùng Format8bppIndexed, nếu 3 kênh dùng Format24bppRgb
+            PixelFormat format = (channels == 1) ? PixelFormat.Format8bppIndexed : PixelFormat.Format24bppRgb;
+            Bitmap bmp = new Bitmap(w, h, format);
+
+            if (channels == 1)
+            {
+                // Cấu hình Palette cho ảnh xám 8-bit
+                ColorPalette palette = bmp.Palette;
+                for (int i = 0; i < 256; i++)
+                {
+                    palette.Entries[i] = System.Drawing.Color.FromArgb(i, i, i);
+                }
+                bmp.Palette = palette;
+            }
+
             var rect = new Rectangle(0, 0, w, h);
             var bmpData = bmp.LockBits(rect, ImageLockMode.WriteOnly, bmp.PixelFormat);
 
-            int stride = bmpData.Stride;
-            int rowLength = w * channels;
-            byte[] buffer = new byte[rowLength];
-
-            for (int y = 0; y < h; y++)
+            try
             {
-                IntPtr src = mat.Data + y * (int)mat.Step();
-                System.Runtime.InteropServices.Marshal.Copy(src, buffer, 0, rowLength);
+                int stride = bmpData.Stride;
+                int rowLength = w * channels;
+                byte[] buffer = new byte[rowLength];
 
-                IntPtr dst = bmpData.Scan0 + y * stride;
-                System.Runtime.InteropServices.Marshal.Copy(buffer, 0, dst, rowLength);
+                for (int y = 0; y < h; y++)
+                {
+                    IntPtr srcPtr = mat.Data + y * (int)mat.Step();
+                    System.Runtime.InteropServices.Marshal.Copy(srcPtr, buffer, 0, rowLength);
+
+                    IntPtr dstPtr = bmpData.Scan0 + y * stride;
+                    System.Runtime.InteropServices.Marshal.Copy(buffer, 0, dstPtr, rowLength);
+                }
+            }
+            finally
+            {
+                bmp.UnlockBits(bmpData);
             }
 
-            bmp.UnlockBits(bmpData);
             return bmp;
         }
 

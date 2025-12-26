@@ -3,10 +3,13 @@ using DetectQRCode.Models.Camera;
 using OpenCvSharp;
 using OpenCvSharp.Extensions;
 using OpenCvSharp.Text;
+using PaddleOCRSharp;
+using Sdcb.RotationDetector;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using TestPerformence.OCR.Utils.Performence;
@@ -33,18 +36,40 @@ namespace GarmentGridApp.Presentation.OCR.Utils
         private static int counter = 0;
         private static bool isSaving = false;
         private static Stopwatch sw = Stopwatch.StartNew();
-        private static Stopwatch swEstinate = Stopwatch.StartNew();
+        public static List<double> SuccessTimes = new List<double>();
+        public static List<double> CannotExtractOCRTimes = new List<double>();
+        public static List<string> CannotExtractOCRDetails = new List<string>();
+        public static List<double> CannotExtractQRTimes = new List<double>();
+        public static List<string> CannotExtractQRDetails = new List<string>();
+
+
+        public static void ResetTimes()
+        {
+            SuccessTimes.Clear();
+            CannotExtractOCRTimes.Clear();
+            CannotExtractQRTimes.Clear();
+            CannotExtractQRDetails.Clear();
+            CannotExtractOCRDetails.Clear();
+        }
         public static DetectInfo DetectLabel(
             int workSessionId,
             Mat frame,
-            Yolo11SegOpenVINO yoloDetector,
-          
+            Yolo11Seg yolo11Seg,
+            PaddleOCREngine ocr,
+             PaddleRotationDetector rotationDetector,
+             ZXing.Windows.Compatibility.BarcodeReader zxingReader,
+            int currentThreshold,
             PictureBox cameraBox,
-            bool isDebugOcr
+            PictureBox processImage,
+            Yolo11SegOpenVINO? yoloDetector = null,
+            bool isStatistic = false,
+            string? fileName = null
             )
         {
+
             try
             {
+                sw.Restart();
                 var result = new DetectInfo();
                
                 Mat originMat = null;
@@ -83,9 +108,17 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                 // ============================================
                 // 1. YOLO DETECTION - Detect trực tiếp trên frame (Mat)
                 // ============================================
-                var detections = yoloDetector.Detect(frame);
+                List<DetectionResult> detections;
+                if (yoloDetector != null)
+                {
+                    detections = yoloDetector.Detect(frame);
+                }
+                else
+                {
+                    detections = yolo11Seg.Detect(frame);
+                }
 
-               
+
 
                 // ============================================
                 // 2. VẼ BOUNDING BOXES LÊN FRAME
@@ -114,15 +147,238 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                     }
                 }
 
+
+
+                if (labelDetection != null)
+                {
+                    if (isSaving == false)
+                    {
+                        isSaving = true;
+                    }
+
+                    counter++;
+                    var maskContours = new List<(int x, int y)>();
+
+                    foreach (var contour in labelDetection.Contours)
+                    {
+                        var polygon = contour
+                            .Select(p => (p.X, p.Y))
+                            .ToList();
+                        foreach (var p in polygon)
+                        {
+                            maskContours.Add((p.X, p.Y));
+                        }
+
+                    }
+
+                    var croptImage = RotationImage.ProcessRotationImage(frame, maskContours); //********************************************************************************************************************
+                    EstimatePerformence.EndPerformence();
+                    EstimatePerformence.StartPerformence("Rotation");
+                    croptYoloMat = croptImage.Clone();
+
+                    var rotation = RotationImage.CheckLabelRotation(croptImage, rotationDetector);
+                    croptImage = RotationImage.Rotate(croptImage, rotation);//********************************************************************************************************************
+                    rotationMat = croptImage.Clone();
+
+                    var croppedBmp = MatToBitmap(croptImage);
+                    EstimatePerformence.EndPerformence();
+
+                    
+
+                    /*var grayStandard = ImageEnhancer.ConvertToGrayscale(croppedBmp);*/
+
+
+
+                   
+                    EstimatePerformence.StartPerformence("Enhancement");
+                    try
+                    {
+                        /*var enhanced = grayStandard;  // Start with original*/
+                        var enhanced = croppedBmp;  // Start with original
+
+
+
+                        // 1️⃣ Tăng sáng (nhà xưởng thường tối)
+                        var brightened = ImageEnhancer.EnhanceDark(enhanced, clipLimit: 2.5);
+                        if (enhanced != croppedBmp) enhanced.Dispose();
+                        enhanced = brightened;
+                        Debug.WriteLine($"[ENHANCEMENT] ✓ EnhanceDark completed");
+
+                        // 2️⃣ Làm sắc nét (cải thiện QR detection)
+                        var sharpened = ImageEnhancer.SharpenBlurry(enhanced);
+                        if (enhanced != croppedBmp) enhanced.Dispose();
+                        enhanced = sharpened;
+                        Debug.WriteLine($"[ENHANCEMENT] ✓ SharpenBlurry completed");
+
+                        // 3️⃣ Upscale nếu ảnh quá nhỏ
+                        int minDim = Math.Min(enhanced.Width, enhanced.Height);
+                        if (minDim < 400)
+                        {
+                            var upscaled = ImageEnhancer.UpscaleSmall(enhanced, 2.0);
+                            if (enhanced != croppedBmp) enhanced.Dispose();
+                            enhanced = upscaled;
+                            Debug.WriteLine($"[ENHANCEMENT] ✓ UpscaleSmall completed: {enhanced.Width}x{enhanced.Height}");
+                        }
+                        else
+                        {
+                            Debug.WriteLine($"[ENHANCEMENT] ⊘ UpscaleSmall skipped (size ok)");
+                        }
+
+                        // Dispose original cropped bitmap nếu đã enhance
+                        /*if (enhanced != grayStandard)
+                        {
+                            grayStandard.Dispose();
+                            grayStandard = enhanced;  // Use enhanced version //********************************************************************************************************************
+                            preProcessImageMat = enhanced.ToMat();
+                        }*/
+                        if (enhanced != croppedBmp)
+                        {
+                            croppedBmp.Dispose();
+                            croppedBmp = enhanced;  // Use enhanced version //********************************************************************************************************************
+                            preProcessImageMat = enhanced.ToMat();
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine($"[⚠ IMAGE ENHANCEMENT ERROR] {ex.Message}");
+                        Debug.WriteLine($"[ENHANCEMENT] ⚠️ Using original image (fallback)");
+                        // Continue with original cropped bitmap
+                    }
+                    EstimatePerformence.EndPerformence();
+                    EstimatePerformence.StartPerformence("QR Detection");
+
+                    /*var (qrPoints, qrText) = LabelDetectorZXing.DetectQRCodeZXing(grayStandard, zxingReader);*/
+                    var (qrPoints, qrText) = LabelDetectorZXing.DetectQRCodeZXing(croppedBmp, zxingReader);
+
+
+                   
+                    //MessageBox.Show($"Time process QR: {timeProcess} ms");
+
+                    if (qrPoints == null)
+                    {
+                        var timeProcess = sw.ElapsedMilliseconds;
+                        CannotExtractQRTimes.Add(timeProcess);
+                        CannotExtractQRDetails.Add(fileName);
+
+                        return result;
+                    }
+
+                    result.QRCode = qrText;
+
+                    OpenCvSharp.Point[] qrBox = qrPoints
+                        .Select(p => new OpenCvSharp.Point((int)Math.Round(p.X), (int)Math.Round(p.Y)))
+                        .ToArray();
+                    EstimatePerformence.EndPerformence();
+
+
+
+
+
+
+                    EstimatePerformence.StartPerformence("OCR Region");
+                    // Gọi hàm với kiểu dữ liệu đã đúng
+                    var mergedCrop = CropComponent.CropAndMergeBottomLeftAndAboveQr(croppedBmp, qrBox);
+
+                    var gray = ImageEnhancer.ConvertToGrayBgr(mergedCrop);
+                    mergedCrop.Dispose();
+                    mergedCrop = gray;//********************************************************************************************************************
+                    croptMergeMat = gray.ToMat();
+
+                    if (mergedCrop != null)
+                    {
+                        bool imageDisplayed = false;
+
+                        // Safety check: Ensure processImage is valid and handle is created
+                        if (processImage != null && processImage.IsHandleCreated)
+                        {
+                            // CRITICAL: Clone bitmap before passing to UI thread
+                            // to prevent "Object is currently in use" error (race condition)
+                            var mergedCropClone = (Bitmap)mergedCrop.Clone();
+
+                            if (!isStatistic)
+                            {
+                                processImage.BeginInvoke(new Action(() =>
+                                {
+                                    try
+                                    {
+                                        var old = processImage.Image;
+                                        processImage.Image = mergedCropClone;
+                                        old?.Dispose();
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        Debug.WriteLine($"[⚠ DISPLAY PROCESS IMAGE ERROR] {ex.Message}");
+                                        // If display failed, dispose the clone to prevent memory leak
+                                        mergedCropClone?.Dispose();
+                                    }
+                                }));
+                            }
+
+                            
+                            imageDisplayed = true;
+                        }
+                        else
+                        {
+                            Debug.WriteLine("[⚠] processImage is null or handle not created - skipping display");
+                        }
+                        EstimatePerformence.EndPerformence();
+                        EstimatePerformence.StartPerformence("OCR Extract");
+                        var (ocrTexts, minScore, debugText) = ExtractTextsFromMergedCrop(ocr, mergedCrop);
+                        if (ocrTexts == null || ocrTexts.Count == 0)
+                        {
+                            var timeOCRProcess = sw.ElapsedMilliseconds;
+                            CannotExtractOCRTimes.Add(timeOCRProcess);
+                            CannotExtractOCRDetails.Add(fileName);
+                            //SaveImageWithStep(2, workSessionId.ToString(), 5, null, originMat, croptYoloMat, rotationMat, preProcessImageMat, croptMergeMat);
+                            return result;
+                        }
+                        var timeProcess = sw.ElapsedMilliseconds;
+                        SuccessTimes.Add(timeProcess);
+
+                        // Always dispose mergedCrop after OCR processing
+                        // (UI thread has its own clone if display succeeded)
+                        mergedCrop.Dispose();
+
+                        result.ProductTotal = ocrTexts[0];
+                        result.ProductCode = ocrTexts[1];
+                        result.Size = ocrTexts[2];
+                        result.Color = ocrTexts[3];
+                        EstimatePerformence.EndPerformence();
+                        if (result.ProductTotal == null || result.ProductCode == null || result.Size == null || result.Color == null)
+                        {
+                            //SaveImageWithStep(1, workSessionId.ToString(), 5, null, originMat, croptYoloMat, rotationMat, preProcessImageMat, croptMergeMat);
+                            //return result;
+                        }
+
+                        //SaveImageWithStep(0, workSessionId.ToString(), null, result, originMat, croptYoloMat, rotationMat, preProcessImageMat, croptMergeMat);
+                    }
+                    else
+                    {
+                        //SaveImageWithStep(2, workSessionId.ToString(), 4, null, originMat, croptYoloMat, rotationMat, preProcessImageMat, null);
+                        //return result;
+                    }
+
+                }
+
+                var processEndTime = sw.Elapsed.TotalMilliseconds;
                 
 
+
+
+
                 var displayBmp = MatToBitmap(displayFrame);
-                cameraBox.BeginInvoke(new Action(() =>
+
+                if (!isStatistic)
                 {
-                    var old = cameraBox.Image;
-                    cameraBox.Image = displayBmp;
-                    old?.Dispose();
-                }));
+                    cameraBox.BeginInvoke(new Action(() =>
+                    {
+                        var old = cameraBox.Image;
+                        cameraBox.Image = displayBmp;
+                        old?.Dispose();
+                    }));
+                }
+                
 
 
                 originMat?.Dispose();
@@ -131,28 +387,7 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                 preProcessImageMat?.Dispose();
                 croptMergeMat?.Dispose();
 
-
                 //ShowPerformence(EstimatePerformence);
-
-
-                if (isSaving && isDebugOcr)
-                {
-                    var totalMs = sw.ElapsedMilliseconds;
-                    var estinateMs = swEstinate.ElapsedMilliseconds;
-                    if (totalMs >= 1000 && estinateMs <= 300000)
-                    {
-                        if (result.ProductTotal != null && result.ProductCode != null)
-                        {
-                            SaveImageTemp(0, workSessionId.ToString(), frame);
-                        }
-                        else
-                        {
-                            SaveImageTemp(1, workSessionId.ToString(), frame);
-                        }
-                        sw.Restart();
-                    }
-                }
-                
 
 
                 return result;
@@ -162,6 +397,49 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                 Debug.WriteLine($"[⚠ DETECT LABEL V2 ERROR] {ex.Message}");
                 Debug.WriteLine($"[⚠ Stack Trace] {ex.StackTrace}");
                 return null;
+            }
+        }
+
+
+
+        public static (List<string> texts, float minScore, string DebugText) ExtractTextsFromMergedCrop(PaddleOCREngine ocr, Bitmap mergedCrop)
+        {
+            var texts = new List<string>();
+            string DebugText = "";
+            float minScore = 999;
+
+            try
+            {
+                if (ocr == null || mergedCrop == null)
+                    return (texts, -999, "[?] Input null");
+
+                OCRResult result;
+                lock (ocr)
+                {
+                    result = ocr.DetectText(mergedCrop);
+                }
+
+                if (result?.TextBlocks?.Count > 0)
+                {
+                    texts = result.TextBlocks
+                        .Where(tb => !string.IsNullOrWhiteSpace(tb.Text))
+                        .Select(tb => tb.Text.Trim())
+                        .ToList();
+
+                    foreach (var tb in result.TextBlocks)
+                    {
+                        if (tb.Score < minScore)
+                            minScore = tb.Score;
+                        DebugText += $"{tb.Text?.Trim()} | Score: {tb.Score * 100:F2}%\r\n";
+                    }
+                }
+
+                return (texts, minScore, DebugText);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[? OCR ONLY ERROR] {ex.Message}");
+                return (texts, -999, DebugText);
             }
         }
 
@@ -412,6 +690,8 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                 Debug.WriteLine($"[SaveOcrImage] Failed: {ex.Message}");
             }
         }
+
+       
 
     }
 }

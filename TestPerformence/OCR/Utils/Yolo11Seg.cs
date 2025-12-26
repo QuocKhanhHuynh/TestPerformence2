@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Windows.Forms.Design.AxImporter;
 
 namespace GarmentGridApp.Presentation.OCR.Utils
 {
@@ -69,8 +68,7 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                 Console.WriteLine("[YOLO11] Creating SessionOptions...");
 
                 _options = new SessionOptions();
-                //_options.AppendExecutionProvider_OpenVINO("CPU");
-                _options.AppendExecutionProvider_OpenVINO("CPU_FP32");
+                // _options.AppendExecutionProvider_OpenVINO("CPU_INT8"); 
                 //_options.AppendExecutionProvider_OpenVINO(@"CPU_FP32");
                 Console.WriteLine("[YOLO11] SessionOptions created successfully");
                 
@@ -100,7 +98,6 @@ namespace GarmentGridApp.Presentation.OCR.Utils
             {
                 Console.WriteLine($"[YOLO11] FATAL ERROR during initialization: {ex.GetType().Name}");
                 Console.WriteLine($"[YOLO11] Message: {ex.Message}");
-                MessageBox.Show(ex.Message);
                 Console.WriteLine($"[YOLO11] Stack trace: {ex.StackTrace}");
                 if (ex.InnerException != null)
                 {

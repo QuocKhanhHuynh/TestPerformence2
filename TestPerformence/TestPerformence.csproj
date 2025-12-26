@@ -7,11 +7,16 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-	<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <Platforms>AnyCPU;x64</Platforms>
-	
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>false</PublishSingleFile>
+    <PublishReadyToRun>false</PublishReadyToRun>
   </PropertyGroup>
+
+  <ItemGroup>
+  <None Include="models\**\*" CopyToOutputDirectory="PreserveNewest" />
+</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Intel.ML.OnnxRuntime.OpenVino" Version="1.23.0" />
@@ -19,6 +24,15 @@
     <PackageReference Include="OpenCvSharp4.Extensions" Version="4.11.0.20250507" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.11.0.20250507" />
     <PackageReference Include="OpenVINO.CSharp.API.Extensions" Version="1.0.7" />
+    <PackageReference Include="Paddle.Runtime.win_x64" Version="3.2.2" />
+    <PackageReference Include="PaddleOCRSharp" Version="6.0.0" />
+    <PackageReference Include="Sdcb.PaddleInference" Version="3.0.1" />
+    <PackageReference Include="Sdcb.PaddleInference.runtime.win64.mkl" Version="3.1.0.54" />
+    <PackageReference Include="Sdcb.PaddleOCR" Version="3.0.1" />
+    <PackageReference Include="Sdcb.PaddleOCR.Models.Local" Version="3.0.1" />
+    <PackageReference Include="Sdcb.RotationDetector" Version="1.0.4" />
+    <PackageReference Include="ZXing.Net" Version="0.16.11" />
+    <PackageReference Include="ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.14" />
   </ItemGroup>
 
 </Project>
