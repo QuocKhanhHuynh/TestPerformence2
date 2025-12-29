@@ -57,6 +57,7 @@ namespace GarmentGridApp.Presentation.OCR.Utils
             Yolo11Seg yolo11Seg,
             PaddleOCREngine ocr,
              PaddleRotationDetector rotationDetector,
+             WeChatQRCode weChatQRCode,
              ZXing.Windows.Compatibility.BarcodeReader zxingReader,
             int currentThreshold,
             PictureBox cameraBox,
@@ -176,16 +177,16 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                     EstimatePerformence.StartPerformence("Rotation");
                     croptYoloMat = croptImage.Clone();
 
-                    var rotation = RotationImage.CheckLabelRotation(croptImage, rotationDetector);
+                    /*var rotation = RotationImage.CheckLabelRotation(croptImage, rotationDetector);
                     croptImage = RotationImage.Rotate(croptImage, rotation);//********************************************************************************************************************
-                    rotationMat = croptImage.Clone();
+                    rotationMat = croptImage.Clone();*/
 
                     var croppedBmp = MatToBitmap(croptImage);
                     EstimatePerformence.EndPerformence();
 
                     
 
-                    /*var grayStandard = ImageEnhancer.ConvertToGrayscale(croppedBmp);*/
+                    var grayStandard = ImageEnhancer.ConvertToGrayscale(croppedBmp);
 
 
 
@@ -193,8 +194,8 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                     EstimatePerformence.StartPerformence("Enhancement");
                     try
                     {
-                        /*var enhanced = grayStandard;  // Start with original*/
-                        var enhanced = croppedBmp;  // Start with original
+                        var enhanced = grayStandard;  // Start with original
+                        /*var enhanced = croppedBmp;  // Start with original 99 100 */
 
 
 
@@ -225,18 +226,19 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                         }
 
                         // Dispose original cropped bitmap nếu đã enhance
-                        /*if (enhanced != grayStandard)
+                        if (enhanced != grayStandard)
                         {
                             grayStandard.Dispose();
-                            grayStandard = enhanced;  // Use enhanced version //********************************************************************************************************************
-                            preProcessImageMat = enhanced.ToMat();
-                        }*/
-                        if (enhanced != croppedBmp)
-                        {
                             croppedBmp.Dispose();
                             croppedBmp = enhanced;  // Use enhanced version //********************************************************************************************************************
                             preProcessImageMat = enhanced.ToMat();
                         }
+                        /*if (enhanced != croppedBmp)
+                        {
+                            croppedBmp.Dispose();
+                            croppedBmp = enhanced;  // Use enhanced version //********************************************************************************************************************
+                            preProcessImageMat = enhanced.ToMat();
+                        }*/
 
                     }
                     catch (Exception ex)
@@ -248,12 +250,19 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                     EstimatePerformence.EndPerformence();
                     EstimatePerformence.StartPerformence("QR Detection");
 
-                    /*var (qrPoints, qrText) = LabelDetectorZXing.DetectQRCodeZXing(grayStandard, zxingReader);*/
-                    var (qrPoints, qrText) = LabelDetectorZXing.DetectQRCodeZXing(croppedBmp, zxingReader);
 
+                    /*if (!isStatistic)
+                    {
+                        processImage.BeginInvoke(new Action(() =>
+                        {
+                            var old = processImage.Image;
+                            processImage.Image = croppedBmp;
+                            old?.Dispose();
+                        }));
+                    }*/
 
-                   
-                    //MessageBox.Show($"Time process QR: {timeProcess} ms");
+                    var (qrPoints, qrText) = LabelDetectorWeChat.DetectQRCodeWeChat(croppedBmp, weChatQRCode);
+                  
 
                     if (qrPoints == null)
                     {
@@ -296,7 +305,7 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                             // to prevent "Object is currently in use" error (race condition)
                             var mergedCropClone = (Bitmap)mergedCrop.Clone();
 
-                            if (!isStatistic)
+                           if (!isStatistic)
                             {
                                 processImage.BeginInvoke(new Action(() =>
                                 {

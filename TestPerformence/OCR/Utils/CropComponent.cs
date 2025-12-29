@@ -130,6 +130,21 @@ namespace demo_ocr_label
                 // Convert sang Bitmap
                 aboveQrCrop = LabelDetector.MatToBitmap(croppedTopRight);
 
+                // Resize vùng aboveQrCrop lên gấp 2 lần bằng OpenCV
+                using var aboveQrMat = LabelDetector.BitmapToMat(aboveQrCrop);
+                using var resizedMat = new Mat();
+                
+                int newWidth = aboveQrMat.Width * 2;
+                int newHeight = aboveQrMat.Height * 2;
+                
+                // Sử dụng INTER_CUBIC cho chất lượng tốt khi upscale
+                Cv2.Resize(aboveQrMat, resizedMat, new OpenCvSharp.Size(newWidth, newHeight), 
+                    interpolation: InterpolationFlags.Cubic);
+                
+                // Dispose ảnh gốc và dùng ảnh đã resize
+                aboveQrCrop.Dispose();
+                aboveQrCrop = LabelDetector.MatToBitmap(resizedMat);
+
                 // === 3) Ghép ảnh ===
                 int mergedWidth = Math.Max(aboveQrCrop.Width, bottomLeftCrop.Width);
                 int mergedHeight = aboveQrCrop.Height + bottomLeftCrop.Height;

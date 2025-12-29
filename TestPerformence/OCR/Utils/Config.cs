@@ -25,15 +25,25 @@ namespace demo_ocr_label
         // các tham số của mô hình PadlleOCR
         public PaddleOCRParams modelParams { get; set; } = new PaddleOCRParams
         {
-            det = true,
-            cls = false,
-            use_angle_cls = true,
-            rec = true,
-            det_db_thresh = 0.3f,
-            det_db_box_thresh = 0.5f,
-            cls_thresh = 0.9f,
-            cpu_math_library_num_threads = 6,
-            det_db_score_mode = true,
+            // --- 1. Điều khiển tác vụ (Bám sát JSON) ---
+            det = true,                             // enabled: true
+            rec = true,                             // rec: true
+            cls = false,                            // useTextlineOrientation: false
+            use_angle_cls = false,                  // Đồng nhất với việc tắt orientation
+
+            cpu_math_library_num_threads = 2,       // cpuThreads: 2
+                                                    // mkldnnCacheCapacity: 10 (Thường được xử lý nội bộ trong bộ khởi tạo Core)
+
+            // --- 3. Tham số Detection (Khớp textDetThresh & textDetBoxThresh) ---
+            det_db_thresh = 0.15f,                  // textDetThresh: 0.15
+            det_db_box_thresh = 0.15f,              // textDetBoxThresh: 0.15
+            det_db_unclip_ratio = 2.0f,             // textDetUnclipRatio: 2.0
+
+            // --- 4. Giới hạn hình ảnh (Khớp textDetLimitSideLen: 640) ---
+            det_limit_side_len = 640,               // textDetLimitSideLen: 640
+
+           
+            det_db_score_mode = true                // Chế độ tính điểm chuẩn cho DB
         };
         public SystemArivables systemArivable { get; set; } = new SystemArivables
         {
@@ -90,6 +100,11 @@ namespace demo_ocr_label
 
         // tính score dựa trên đa giác, chính xách hơn nhưng chậm hơn xíu
         public bool det_db_score_mode { get; set; } = false; 
+
+
+        public float det_db_unclip_ratio { get; set; }
+
+        public int det_limit_side_len { get; set; }        // textDetLimitSideLen: 640
 
     }
     public class SystemArivables

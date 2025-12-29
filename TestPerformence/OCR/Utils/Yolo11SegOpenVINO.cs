@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using TestPerformence.OCR.Utils;
 
 namespace GarmentGridApp.Presentation.OCR.Utils
 {
@@ -50,7 +51,7 @@ namespace GarmentGridApp.Presentation.OCR.Utils
             public float[] MaskCoefficients { get; set; } = new float[MASK_COEFFICIENTS_COUNT];
         }
 
-        public Yolo11SegOpenVINO(string modelXmlPath, string[] classNames, float confThreshold = 0.25f, float iouThreshold = 0.45f)
+        public Yolo11SegOpenVINO(string modelXmlPath, OpenVinoSetting setting,  string[] classNames, float confThreshold = 0.25f, float iouThreshold = 0.45f)
         {
             try
             {
@@ -68,10 +69,34 @@ namespace GarmentGridApp.Presentation.OCR.Utils
                 Console.WriteLine($"[OpenVINO] Reading model: {modelXmlPath}");
                 _model = _core.read_model(modelXmlPath);
 
-                // 2. Compile model cho thiết bị (CPU tự động dùng INT8/FP32 tối ưu nhất)
-                // Bạn có thể đổi "CPU" thành "GPU" nếu muốn chạy trên Intel Graphics
-                Console.WriteLine("[OpenVINO] Compiling model for CPU...");
-                _compiledModel = _core.compile_model(_model, "CPU");
+
+
+
+
+
+                var ovConfigs = new List<KeyValuePair<string, string>>
+{
+    new ("INFERENCE_NUM_THREADS", setting.NumThreads.ToString()),
+    new ("NUM_STREAMS", setting.NumStreams.ToString()),
+    //new ("PERFORMANCE_HINT", setting.PerformanceHint),
+    
+    // THAY ĐỔI Ở ĐÂY: Loại bỏ AFFINITY nếu bị báo lỗi NotFound
+    // Dùng CPU_BIND_THREAD là đủ để ghim luồng
+   // new ("CPU_BIND_THREAD", setting.EnableCpuPinning ? "YES" : "NO"),
+
+    //new ("MODEL_PRIORITY", setting.InferencePriority),
+    //new ("ENABLE_PROFILING", setting.EnableProfiling ? "YES" : "NO"),
+    //new ("INFERENCE_PRECISION_HINT", setting.InferPrecision == 3 ? "i8" : (setting.InferPrecision == 2 ? "f16" : "f32")),
+    //new ("ENABLE_HYPER_THREADING", setting.EnableHyperThreading ? "YES" : "NO")
+};
+
+                // Sau đó duyệt để gán vào Core
+                foreach (var config in ovConfigs)
+                {
+                    _core.set_property(setting.DeviceName, config);
+                }
+                _compiledModel = _core.compile_model(_model, setting.DeviceName);
+
 
                 // 3. Tạo Request
                 _inferRequest = _compiledModel.create_infer_request();
